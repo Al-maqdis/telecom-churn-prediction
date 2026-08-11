@@ -213,25 +213,25 @@ streamlit run app/app.py
 
 ### Low Churn Prediction
 
-![Low Risk](reports/figures/screenshots/prediction_low_risk.png)
+![Low Risk](reports/figures/screenshots/prediction_low_risk.jpg)
 
 ---
 
 ### Medium Churn Prediction
 
-![Medium Risk](reports/figures/screenshots/prediction_medium_risk.png)
+![Medium Risk](reports/figures/screenshots/prediction_medium_risk.jpg)
 
 ---
 
 ### High Churn Prediction
 
-![High Risk](reports/figures/screenshots/prediction_high_risk.png)
+![High Risk](reports/figures/screenshots/prediction_high_risk.jpg)
 
 ---
 
 ### Processed Customer Record
 
-![Processed](reports/figures/screenshots/processed_features.png)
+![Processed](reports/figures/screenshots/processed_features.jpg)
 
 ---
 
