@@ -80,6 +80,8 @@ total = st.sidebar.number_input(
     9000.0,
     1000.0
 )
+
+
 # ===========================================
 # Phone Service
 # ===========================================
@@ -89,14 +91,30 @@ phone_service = st.sidebar.selectbox(
     ["No", "Yes"]
 )
 
+
 # ===========================================
 # Multiple Lines
 # ===========================================
 
-multiple_lines = st.sidebar.selectbox(
-    "Multiple Lines",
-    ["No phone service", "No", "Yes"]
-)
+if phone_service == "No":
+
+    multiple_lines = "No phone service"
+
+    st.sidebar.selectbox(
+        "Multiple Lines",
+        ["No phone service"],
+        disabled=True,
+        key="multiple_lines_disabled"
+    )
+
+else:
+
+    multiple_lines = st.sidebar.selectbox(
+        "Multiple Lines",
+        ["No", "Yes"],
+        key="multiple_lines_enabled"
+    )
+
 
 # ===========================================
 # Internet Service
@@ -107,59 +125,251 @@ internet_service = st.sidebar.selectbox(
     ["DSL", "Fiber optic", "No"]
 )
 
+
 # ===========================================
 # Online Security
 # ===========================================
 
-online_security = st.sidebar.selectbox(
-    "Online Security",
-    ["No", "Yes", "No internet service"]
-)
+if internet_service == "No":
+
+    online_security = "No internet service"
+
+    st.sidebar.selectbox(
+        "Online Security",
+        ["No internet service"],
+        disabled=True,
+        key="online_security_disabled"
+    )
+
+else:
+
+    online_security = st.sidebar.selectbox(
+        "Online Security",
+        ["No", "Yes"],
+        key="online_security_enabled"
+    )
+
 
 # ===========================================
 # Online Backup
 # ===========================================
 
-online_backup = st.sidebar.selectbox(
-    "Online Backup",
-    ["No", "Yes", "No internet service"]
+if internet_service == "No":
+
+    online_backup = "No internet service"
+
+    st.sidebar.selectbox(
+        "Online Backup",
+        ["No internet service"],
+        disabled=True,
+        key="online_backup_disabled"
+    )
+
+else:
+
+    online_backup = st.sidebar.selectbox(
+        "Online Backup",
+        ["No", "Yes"],
+        key="online_backup_enabled"
+    )
+
+
+# ===========================================
+# Phone Service
+# ===========================================
+
+phone_service = st.sidebar.selectbox(
+    "Phone Service",
+    ["No", "Yes"],
+    key="phone_service"
 )
+
+
+# ===========================================
+# Multiple Lines
+# ===========================================
+
+if phone_service == "No":
+
+    multiple_lines = "No phone service"
+
+    st.sidebar.selectbox(
+        "Multiple Lines",
+        ["No phone service"],
+        index=0,
+        disabled=True,
+        key="multiple_lines"
+    )
+
+else:
+
+    multiple_lines = st.sidebar.selectbox(
+        "Multiple Lines",
+        ["No", "Yes"],
+        key="multiple_lines"
+    )
+
+
+# ===========================================
+# Internet Service
+# ===========================================
+
+internet_service = st.sidebar.selectbox(
+    "Internet Service",
+    ["DSL", "Fiber optic", "No"],
+    key="internet_service"
+)
+
+
+# ===========================================
+# Online Security
+# ===========================================
+
+if internet_service == "No":
+
+    online_security = "No internet service"
+
+    st.sidebar.selectbox(
+        "Online Security",
+        ["No internet service"],
+        index=0,
+        disabled=True,
+        key="online_security"
+    )
+
+else:
+
+    online_security = st.sidebar.selectbox(
+        "Online Security",
+        ["No", "Yes"],
+        key="online_security"
+    )
+
+
+# ===========================================
+# Online Backup
+# ===========================================
+
+if internet_service == "No":
+
+    online_backup = "No internet service"
+
+    st.sidebar.selectbox(
+        "Online Backup",
+        ["No internet service"],
+        index=0,
+        disabled=True,
+        key="online_backup"
+    )
+
+else:
+
+    online_backup = st.sidebar.selectbox(
+        "Online Backup",
+        ["No", "Yes"],
+        key="online_backup"
+    )
+
 
 # ===========================================
 # Device Protection
 # ===========================================
 
-device_protection = st.sidebar.selectbox(
-    "Device Protection",
-    ["No", "Yes", "No internet service"]
-)
+if internet_service == "No":
+
+    device_protection = "No internet service"
+
+    st.sidebar.selectbox(
+        "Device Protection",
+        ["No internet service"],
+        index=0,
+        disabled=True,
+        key="device_protection"
+    )
+
+else:
+
+    device_protection = st.sidebar.selectbox(
+        "Device Protection",
+        ["No", "Yes"],
+        key="device_protection"
+    )
+
 
 # ===========================================
 # Tech Support
 # ===========================================
 
-tech_support = st.sidebar.selectbox(
-    "Tech Support",
-    ["No", "Yes", "No internet service"]
-)
+if internet_service == "No":
+
+    tech_support = "No internet service"
+
+    st.sidebar.selectbox(
+        "Tech Support",
+        ["No internet service"],
+        index=0,
+        disabled=True,
+        key="tech_support"
+    )
+
+else:
+
+    tech_support = st.sidebar.selectbox(
+        "Tech Support",
+        ["No", "Yes"],
+        key="tech_support"
+    )
+
 
 # ===========================================
 # Streaming TV
 # ===========================================
 
-streaming_tv = st.sidebar.selectbox(
-    "Streaming TV",
-    ["No", "Yes", "No internet service"]
-)
+if internet_service == "No":
+
+    streaming_tv = "No internet service"
+
+    st.sidebar.selectbox(
+        "Streaming TV",
+        ["No internet service"],
+        index=0,
+        disabled=True,
+        key="streaming_tv"
+    )
+
+else:
+
+    streaming_tv = st.sidebar.selectbox(
+        "Streaming TV",
+        ["No", "Yes"],
+        key="streaming_tv"
+    )
+
 
 # ===========================================
 # Streaming Movies
 # ===========================================
 
-streaming_movies = st.sidebar.selectbox(
-    "Streaming Movies",
-    ["No", "Yes", "No internet service"]
-)
+if internet_service == "No":
+
+    streaming_movies = "No internet service"
+
+    st.sidebar.selectbox(
+        "Streaming Movies",
+        ["No internet service"],
+        index=0,
+        disabled=True,
+        key="streaming_movies"
+    )
+
+else:
+
+    streaming_movies = st.sidebar.selectbox(
+        "Streaming Movies",
+        ["No", "Yes"],
+        key="streaming_movies"
+    )
+
 
 # ===========================================
 # Contract
@@ -167,8 +377,10 @@ streaming_movies = st.sidebar.selectbox(
 
 contract = st.sidebar.selectbox(
     "Contract",
-    ["Month-to-month", "One year", "Two year"]
+    ["Month-to-month", "One year", "Two year"],
+    key="contract"
 )
+
 
 # ===========================================
 # Paperless Billing
@@ -176,8 +388,10 @@ contract = st.sidebar.selectbox(
 
 paperless = st.sidebar.selectbox(
     "Paperless Billing",
-    ["No", "Yes"]
+    ["No", "Yes"],
+    key="paperless"
 )
+
 
 # ===========================================
 # Payment Method
@@ -190,7 +404,8 @@ payment_method = st.sidebar.selectbox(
         "Mailed check",
         "Bank transfer (automatic)",
         "Credit card (automatic)"
-    ]
+    ],
+    key="payment_method"
 )
 
 
