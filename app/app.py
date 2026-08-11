@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd
 import joblib
 from pathlib import Path
+import io
+
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 
 # ==========================================
 # Project Paths
@@ -80,6 +86,224 @@ total = st.sidebar.number_input(
     9000.0,
     1000.0
 )
+
+
+# ==========================================
+# PDF Report Generator
+# ==========================================
+
+def create_pdf_report(
+    customer_data,
+    prediction,
+    probability,
+    risk_level,
+    recommendations
+):
+    buffer = io.BytesIO()
+
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=40,
+        bottomMargin=40
+    )
+
+    styles = getSampleStyleSheet()
+
+    title_style = styles["Title"]
+    heading_style = styles["Heading2"]
+    normal_style = styles["BodyText"]
+
+    story = []
+
+    # ------------------------------------------
+    # Title
+    # ------------------------------------------
+
+    story.append(
+        Paragraph(
+            "Customer Churn Prediction Report",
+            title_style
+        )
+    )
+
+    story.append(Spacer(1, 15))
+
+    story.append(
+        Paragraph(
+            "Machine Learning Customer Retention Analysis",
+            normal_style
+        )
+    )
+
+    story.append(Spacer(1, 20))
+
+    # ------------------------------------------
+    # Prediction Result
+    # ------------------------------------------
+
+    story.append(
+        Paragraph(
+            "Prediction Result",
+            heading_style
+        )
+    )
+
+    prediction_text = (
+        "Customer is likely to churn"
+        if prediction == 1
+        else "Customer is likely to remain"
+    )
+
+    prediction_data = [
+        ["Prediction", prediction_text],
+        ["Churn Probability", f"{probability * 100:.2f}%"],
+        ["Risk Level", risk_level]
+    ]
+
+    prediction_table = Table(
+        prediction_data,
+        colWidths=[170, 300]
+    )
+
+    prediction_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+            ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+            ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ("PADDING", (0, 0), (-1, -1), 7),
+        ])
+    )
+
+    story.append(prediction_table)
+
+    story.append(Spacer(1, 20))
+
+    # ------------------------------------------
+    # Customer Information
+    # ------------------------------------------
+
+    story.append(
+        Paragraph(
+            "Customer Information",
+            heading_style
+        )
+    )
+
+    customer_rows = [
+        ["Field", "Value"]
+    ]
+
+    for column, value in customer_data.items():
+        customer_rows.append([
+            str(column),
+            str(value)
+        ])
+
+    customer_table = Table(
+        customer_rows,
+        colWidths=[220, 250]
+    )
+
+    customer_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("PADDING", (0, 0), (-1, -1), 6),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ])
+    )
+
+    story.append(customer_table)
+
+    story.append(Spacer(1, 20))
+
+    # ------------------------------------------
+    # Recommendations
+    # ------------------------------------------
+
+    story.append(
+        Paragraph(
+            "Recommended Action",
+            heading_style
+        )
+    )
+
+    for recommendation in recommendations:
+        story.append(
+            Paragraph(
+                f"• {recommendation}",
+                normal_style
+            )
+        )
+
+        story.append(Spacer(1, 5))
+
+    story.append(Spacer(1, 15))
+
+    # ------------------------------------------
+    # Model Information
+    # ------------------------------------------
+
+    story.append(
+        Paragraph(
+            "Model Information",
+            heading_style
+        )
+    )
+
+    model_data = [
+        ["Algorithm", "Logistic Regression"],
+        ["Dataset", "IBM Telco Customer Churn"],
+        ["Accuracy", "80.62%"],
+        ["ROC-AUC", "0.842"],
+        ["Training Samples", "5,634"],
+        ["Testing Samples", "1,409"],
+    ]
+
+    model_table = Table(
+        model_data,
+        colWidths=[170, 300]
+    )
+
+    model_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (0, -1), colors.lightgrey),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+            ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+            ("PADDING", (0, 0), (-1, -1), 6),
+        ])
+    )
+
+    story.append(model_table)
+
+    story.append(Spacer(1, 20))
+
+    story.append(
+        Paragraph(
+            "Developed by HyBeek | Customer Churn Prediction System",
+            normal_style
+        )
+    )
+
+    story.append(
+        Paragraph(
+            "© 2026 HyBeek",
+            normal_style
+        )
+    )
+
+    doc.build(story)
+
+    buffer.seek(0)
+
+    return buffer
+
 
 
 # ===========================================
@@ -372,93 +596,202 @@ input_data[numerical_columns] = scaler.transform(
 )
 
 
-predict_button = st.button("Predict Customer Churn")
+# ==========================================
+# Customer Churn Prediction
+# ==========================================
+
+predict_button = st.button(
+    "Predict Customer Churn"
+)
 
 if predict_button:
+
+    # --------------------------------------
+    # Make Prediction
+    # --------------------------------------
 
     prediction = model.predict(input_data)[0]
 
     probability = model.predict_proba(input_data)[0][1]
 
-    # Show prediction
-    if prediction == 1:
-        st.error("⚠ Customer is likely to churn.")
-    else:
-        st.success("✅ Customer is likely to remain.")
+    # --------------------------------------
+    # Model Prediction
+    # --------------------------------------
 
-    # Probability
+    if prediction == 1:
+
+        st.error(
+            "⚠️ Customer is likely to churn."
+        )
+
+    else:
+
+        st.success(
+            "✅ Customer is likely to remain."
+        )
+
+    # --------------------------------------
+    # Churn Probability
+    # --------------------------------------
+
     st.metric(
         "Churn Probability",
         f"{probability:.2%}"
     )
 
-    # Progress bar
     st.progress(float(probability))
 
-    # Risk level
+    # --------------------------------------
+    # Risk Classification
+    # --------------------------------------
+
     if probability < 0.30:
 
-        st.success("🟢 Low Churn Risk")
+        risk_level = "Low Churn Risk"
 
-        st.info("""
-### Recommendation
+        recommendations = [
+            "Continue current engagement.",
+            "Maintain service quality.",
+            "Promote premium service packages."
+        ]
 
-• Continue current engagement.
-
-• Maintain service quality.
-
-• Promote premium service packages.
-""")
+        st.success(
+            "🟢 Low Churn Risk"
+        )
 
     elif probability < 0.60:
 
-        st.warning("🟡 Medium Churn Risk")
+        risk_level = "Medium Churn Risk"
 
-        st.info("""
-### Recommendation
+        recommendations = [
+            "Offer loyalty rewards.",
+            "Schedule customer follow-up.",
+            "Recommend annual contract."
+        ]
 
-• Offer loyalty rewards.
-
-• Schedule customer follow-up.
-
-• Recommend annual contract.
-""")
+        st.warning(
+            "🟡 Medium Churn Risk"
+        )
 
     else:
 
-        st.error("🔴 High Churn Risk")
+        risk_level = "High Churn Risk"
 
-        st.info("""
-### Recommendation
+        recommendations = [
+            "Launch an immediate retention campaign.",
+            "Offer a targeted discount.",
+            "Assign dedicated customer support.",
+            "Contact customer within 48 hours."
+        ]
 
-• Immediate retention campaign.
+        st.error(
+            "🔴 High Churn Risk"
+        )
 
-• Offer discount.
+    # --------------------------------------
+    # Recommendations
+    # --------------------------------------
 
-• Assign customer support.
+    st.info("### Recommendation")
 
-• Contact customer within 48 hours.
-""")
+    for recommendation in recommendations:
 
-        st.divider()
+        st.write(
+            f"• {recommendation}"
+        )
 
-st.subheader("ℹ️ Model Information")
+    # ======================================
+    # PDF CUSTOMER REPORT
+    # ======================================
+
+    customer_data = {
+        "Gender": gender,
+        "Senior Citizen": senior,
+        "Partner": partner,
+        "Dependents": dependents,
+        "Tenure (Months)": tenure,
+        "Monthly Charges": monthly,
+        "Total Charges": total,
+        "Phone Service": phone_service,
+        "Multiple Lines": multiple_lines,
+        "Internet Service": internet_service,
+        "Online Security": online_security,
+        "Online Backup": online_backup,
+        "Device Protection": device_protection,
+        "Tech Support": tech_support,
+        "Streaming TV": streaming_tv,
+        "Streaming Movies": streaming_movies,
+        "Contract": contract,
+        "Paperless Billing": paperless,
+        "Payment Method": payment_method
+    }
+
+    pdf_file = create_pdf_report(
+        customer_data=customer_data,
+        prediction=prediction,
+        probability=probability,
+        risk_level=risk_level,
+        recommendations=recommendations
+    )
+
+    st.download_button(
+        label="📄 Download Customer Report",
+        data=pdf_file,
+        file_name="customer_churn_report.pdf",
+        mime="application/pdf"
+    )
+
+
+# ==========================================
+# Model Information
+# ==========================================
+
+st.divider()
+
+st.subheader(
+    "ℹ️ Model Information"
+)
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.write("**Algorithm:** Logistic Regression")
-    st.write("**Accuracy:** 80.62%")
-    st.write("**ROC-AUC:** 0.842")
+
+    st.write(
+        "**Algorithm:** Logistic Regression"
+    )
+
+    st.write(
+        "**Accuracy:** 80.62%"
+    )
+
+    st.write(
+        "**ROC-AUC:** 0.842"
+    )
+
 
 with col2:
-    st.write("**Dataset:** IBM Telco Customer Churn")
-    st.write("**Training Samples:** 5,634")
-    st.write("**Testing Samples:** 1,409")
 
-    st.divider()
+    st.write(
+        "**Dataset:** IBM Telco Customer Churn"
+    )
 
-st.markdown("""
+    st.write(
+        "**Training Samples:** 5,634"
+    )
+
+    st.write(
+        "**Testing Samples:** 1,409"
+    )
+
+
+# ==========================================
+# Developer Information
+# ==========================================
+
+st.divider()
+
+st.markdown(
+    """
 ### 👨‍💻 Developed By
 
 **HyBeek**
@@ -474,4 +807,5 @@ Built with:
 - Matplotlib
 
 © 2026
-""")
+"""
+)
