@@ -88,98 +88,6 @@ total = st.sidebar.number_input(
 
 phone_service = st.sidebar.selectbox(
     "Phone Service",
-    ["No", "Yes"]
-)
-
-
-# ===========================================
-# Multiple Lines
-# ===========================================
-
-if phone_service == "No":
-
-    multiple_lines = "No phone service"
-
-    st.sidebar.selectbox(
-        "Multiple Lines",
-        ["No phone service"],
-        disabled=True,
-        key="multiple_lines_disabled"
-    )
-
-else:
-
-    multiple_lines = st.sidebar.selectbox(
-        "Multiple Lines",
-        ["No", "Yes"],
-        key="multiple_lines_enabled"
-    )
-
-
-# ===========================================
-# Internet Service
-# ===========================================
-
-internet_service = st.sidebar.selectbox(
-    "Internet Service",
-    ["DSL", "Fiber optic", "No"]
-)
-
-
-# ===========================================
-# Online Security
-# ===========================================
-
-if internet_service == "No":
-
-    online_security = "No internet service"
-
-    st.sidebar.selectbox(
-        "Online Security",
-        ["No internet service"],
-        disabled=True,
-        key="online_security_disabled"
-    )
-
-else:
-
-    online_security = st.sidebar.selectbox(
-        "Online Security",
-        ["No", "Yes"],
-        key="online_security_enabled"
-    )
-
-
-# ===========================================
-# Online Backup
-# ===========================================
-
-if internet_service == "No":
-
-    online_backup = "No internet service"
-
-    st.sidebar.selectbox(
-        "Online Backup",
-        ["No internet service"],
-        disabled=True,
-        key="online_backup_disabled"
-    )
-
-else:
-
-    online_backup = st.sidebar.selectbox(
-        "Online Backup",
-        ["No", "Yes"],
-        key="online_backup_enabled"
-    )
-
-
-# ===========================================
-# Phone Service
-# ===========================================
-
-phone_service = st.sidebar.selectbox(
-    "Phone Service",
     ["No", "Yes"],
     key="phone_service"
 )
@@ -407,6 +315,9 @@ payment_method = st.sidebar.selectbox(
     ],
     key="payment_method"
 )
+
+
+
 
 
 # ===========================================
