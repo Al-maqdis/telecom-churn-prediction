@@ -440,37 +440,41 @@ pip install -r requirements.txt
 streamlit run app/app.py
 ```
 
----
-
 ## 📸 Application Preview
 
 ### Home Page
 
-![Home](reports/figures/screenshots/home_page.png)
+![Home](reports/screenshots/home_page.png)
 
 ---
 
 ### Low Churn Risk
 
-![Low Risk](reports/figures/screenshots/prediction_low_risk.jpg)
+![Low Risk](reports/screenshots/prediction_low_risk.jpeg)
 
 ---
 
 ### Medium Churn Risk
 
-![Medium Risk](reports/figures/screenshots/prediction_medium_risk.jpg)
+![Medium Risk](reports/screenshots/prediction_medium_risk.jpeg)
 
 ---
 
 ### High Churn Risk
 
-![High Risk](reports/figures/screenshots/prediction_high_risk.jpg)
+![High Risk](reports/screenshots/prediction_high_risk.jpeg)
 
 ---
 
 ### Processed Customer Record
 
-![Processed](reports/figures/screenshots/processed_features.jpg)
+![Processed](reports/screenshots/processed_features.jpeg)
+
+---
+
+### Processed Customer Record
+
+![Processed](reports/screenshots/processed_features.jpeg)
 
 ---
 
